@@ -49,7 +49,7 @@ RETVAL=0
 start()
 {
 	echo -n $"Starting $PROG: "
-	daemon --user ircddb --pidfile $PIDFILE $IRCDDBD_BIN $DAEMON_ARGS
+	daemon --user ircddb --pidfile $PIDFILE $DAEMON_ENV $IRCDDBD_BIN $DAEMON_ARGS
 	RETVAL=$?
 	echo
 	[ $RETVAL = 0 ] && touch $PIDFILE
