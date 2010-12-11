@@ -1,0 +1,14 @@
+This program downloads the latest ircDDB JAR files using "curl"
+and starts the ircDDB java program.
+
+
+The code uses three files from "libbsd", version 0.2.0.
+http://libbsd.freedesktop.org/
+
+libutil.h
+pidfile.c
+flopen.c
+
+Please look at the source files and the file COPYING for copyrights.
+
+
