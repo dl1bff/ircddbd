@@ -1,0 +1,15 @@
+
+keystore "ircDDB.keystore";
+
+grant codeBase "file:/var/cache/ircddbd/ircDDB2.jar", signedBy "dl1bff" {
+        permission java.security.AllPermission;
+};
+
+grant codeBase "file:/var/cache/ircddbd/app2.jar", signedBy "dl1bff" {
+        permission java.security.AllPermission;
+};
+
+grant codeBase "file:/opt/products/dstar/apache-tomcat-5.5.20/common/lib/postgresql-8.2-504.jdbc3.jar" {
+        permission java.security.AllPermission;
+};
+
