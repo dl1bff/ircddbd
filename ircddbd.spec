@@ -29,7 +29,7 @@ Summary: ircDDB daemon
 URL: http://ircddb.net
 Packager: Michael Dirska DL1BFF <dl1bff@mdx.de>
 Requires: curl >= 7
-Source0: dl1bff-ircDDB-mheard-v1.2-0-g50b2ef4.tar.gz
+Source0: dl1bff-ircddbd-v1.0-0-g07caea2.tar.gz
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -38,7 +38,7 @@ and starts the ircDDB java program.
 
 
 %prep
-%setup -n dl1bff-ircDDB-mheard-50b2ef4
+%setup -n dl1bff-ircddbd-07caea2
 
 
 %build
@@ -52,7 +52,8 @@ cp ircddbd %{buildroot}/%{_sbindir}/%{name}
 mkdir -p %{buildroot}/etc/default
 cp etc_default_ircddbd %{buildroot}/etc/default/%{name}
 mkdir -p %{buildroot}/var/run/%{name}
-mkdir -p %{buildroot}/var/lib/%{name}
+mkdir -p %{buildroot}/var/cache/%{name}
+mkdir -p %{buildroot}/var/log/%{name}
 mkdir -p %{buildroot}/etc/init.d
 cp centos_etc_initd_ircddbd %{buildroot}/etc/init.d/%{name}
 mkdir -p %{buildroot}/etc/%{name}

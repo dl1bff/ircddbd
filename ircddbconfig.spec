@@ -22,14 +22,14 @@
 
 Name: ircddbconfig
 Version: 1.0
-Release: 2
+Release: 3
 License: GPLv2
 Group: Applications/System
 Summary: ircDDB auto config script
 URL: http://ircddb.net
 Packager: Michael Dirska DL1BFF <dl1bff@mdx.de>
-Requires: ed >= 0.2, gawk >= 3
-Source0: ircddbconfig.sh
+Requires: ed >= 0.2, gawk >= 3, ircddbd, ircddbmhd
+Source0: dl1bff-ircddbd-v1.0-0-g07caea2.tar.gz
 BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
 
@@ -37,14 +37,15 @@ BuildArch: noarch
 This script tries to remove old versions of ircDDB from the computer and
 configures the various parts of a DSTAR repeater automatically.
 
+%prep
+%setup -n dl1bff-ircddbd-07caea2
 
 %build
-cp %{SOURCE0} %{name}
 
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{_sbindir}
-cp %{name} %{buildroot}/%{_sbindir}/%{name}
+cp %{name}.sh %{buildroot}/%{_sbindir}/%{name}
 
 %clean
 rm -rf %{buildroot}
@@ -59,4 +60,5 @@ echo ""
 echo "##############################################################################"
 echo "# Start the automatic configuration with this command: %{_sbindir}/%{name}"
 echo "##############################################################################"
+
 
