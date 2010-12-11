@@ -1,6 +1,6 @@
 /*
 
-ircDDB-mheard
+ircddbd daemon
 
 Copyright (C) 2010   Michael Dirska, DL1BFF (dl1bff@mdx.de)
 

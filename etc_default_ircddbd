@@ -1,46 +1,44 @@
-# 
-# 
+#
+#
 # ircddbd daemon
-# 
+#
 # Copyright (C) 2010   Michael Dirska, DL1BFF (dl1bff@mdx.de)
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 
 
-all: ircddbd
+URL=http://group1-update.ircddb.net/ircDDB
+
+FILE1=app2.jar
+FILE2=ircDDB2.jar
+VARDIR=/var/cache/ircddbd
+
+PGSQL=/opt/products/dstar/apache-tomcat-5.5.20/common/lib/postgresql-8.2-504.jdbc3.jar
+
+EXECBIN=/opt/products/dstar/jdk1.5.0_09/bin/java
+ARG1="-Djava.security.manager"
+ARG2="-Djava.security.policy=ircDDB.policy"
+ARG3="-cp"
+ARG4="$VARDIR/$FILE1:$VARDIR/$FILE2:$PGSQL"
+ARG5="net.ircDDB.IRCDDBApp"
+
+export FILE1 FILE2 VARDIR EXECBIN ARG1 ARG2 ARG3 ARG4 ARG5 URL
+
+WORKINGDIR=/etc/ircddbd
+LOGDIR=/var/log/ircddbd
 
 
-pidfile.c: libutil.h
-
-flopen.c: libutil.h
-
-ircddbd.c: libutil.h
-
-
-ircddbd: ircddbd.o pidfile.o flopen.o
-
-
-
-clean:
-	rm -f *.o
-
-dist-clean: clean
-	rm -f ircddbd
-
-rpm:
-	rpmbuild -ba ircddbd.spec
-
-
+DAEMON_ARGS="$PIDFILE $WORKINGDIR $LOGDIR/stdout.log $LOGDIR/stderr.log"
 

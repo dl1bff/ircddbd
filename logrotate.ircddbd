@@ -1,0 +1,19 @@
+
+/var/log/ircddbd/stdout.log {
+    daily
+    rotate 7
+    copytruncate
+    compress
+    notifempty
+    missingok
+}
+
+/var/log/ircddbd/stderr.log {
+    daily
+    rotate 7
+    copytruncate
+    compress
+    notifempty
+    missingok
+}
+
