@@ -124,6 +124,13 @@ then
   IRCDDBD_CONFIG_CHANGED=1
 fi
 
+transfer_value /opt/ircDDB/ircDDB.properties irc_password /etc/ircddbd/ircDDB.properties irc_password
+
+if [ "$?" = 1 ]
+then
+  IRCDDBD_CONFIG_CHANGED=1
+fi
+
 transfer_value /opt/products/dstar/dstar_gw/dsgwd/dsgwd.conf ZR_ADDR /etc/default/ircddbmhd ZR_ADDR
 
 if [ "$?" = 1 ]
