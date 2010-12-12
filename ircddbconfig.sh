@@ -22,43 +22,49 @@
 
 comment_out() {
 
-  echo "  looking for $2 in file $1"
+  RETVAL=0
+
+  echo "  looking for '$2' in file $1"
 
   if grep -q "^[[:space:]]*$2" "$1"
   then
-    echo "  commenting out $2"
+    echo "  commenting out '$2'"
     echo -e ",s/^[[:space:]]*\\($2\\)/# \\1\nwq" | ed -s "$1"
+    RETVAL=1
   else
-    echo "  $2 not found in file $1"
+    echo "  '$2' not found in file $1"
   fi
   
+  return $RETVAL
 }
 
 transfer_value() {
 
+  RETVAL=0
+
   if [ $# != 4 ]
   then
-    return
+    return $RETVAL
   fi
 
-  echo "* $1($2) -> $3($4)"
+  echo " - $1($2) -> $3($4)"
 
   if [ ! -f "$1" ]
   then
-    echo "  $1 does not exists"
-    return
+    echo "   $1 does not exists"
+    return $RETVAL
   fi
 
   if [ ! -f "$3" ]
   then
-    echo "  $3 does not exists"
-    return
+    echo "   $3 does not exists"
+    return $RETVAL
   fi
 
   if ! grep -q "^[[:space:]]*${2}[[:space:]]*=[[:space:]]*[[:graph:]][[:graph:]]*" "$1"
   then
-    echo "  $1 does not contain $2 property"
-    return
+    echo "   $1 does not contain $2 property"
+    return $RETVAL
   fi
 
   VALUE=` gawk '
@@ -70,26 +76,27 @@ transfer_value() {
 
   if [ "x$VALUE" = "x" ]
   then
-    echo "  could not read property $2 from file $1"
-    return
+    echo "   could not read property $2 from file $1"
+    return $RETVAL
   fi
 
   if grep -q "^[[:space:]]*${4}[[:space:]]*=[[:space:]]*[[:graph:]][[:graph:]]*" "$3"
   then
     if grep -q "^[[:space:]]*${4}[[:space:]]*=[[:space:]]*${VALUE}[[:space:]]*$" "$3"
     then
-      echo "  $3 already has ${4}=$VALUE"
+      echo "   $3 already has ${4}=$VALUE"
     else
-      echo "  setting ${4}=$VALUE in file $3"
+      echo "   setting ${4}=$VALUE in file $3"
 
       echo -e ",s/^[[:space:]]*${4}[[:space:]]*=[[:space:]]*[[:graph:]][[:graph:]]*/${4}=$VALUE/\nwq" | ed -s "$3"
+      RETVAL=1
     fi
   else
-    echo "  adding ${4}=$VALUE to file $3"
+    echo "   adding ${4}=$VALUE to file $3"
     echo "${4}=$VALUE" >> "$3"
   fi
 
-
+  return $RETVAL
 }
 
 
@@ -97,16 +104,43 @@ transfer_value() {
 
 echo "*** ircDDB auto config script"
 
+IRCDDBD_CONFIG_CHANGED=0
+IRCDDBMHD_CONFIG_CHANGED=0
+
+echo ""
+echo "* looking for ircDDB parameters that can be set automatically:"
+
 transfer_value /etc/default/ircddbmhd MHEARD_UDP_PORT /etc/ircddbd/ircDDB.properties mheard_udp_port
 
-transfer_value /opt/products/dstar/dstar_gw/dsgwd/dsgwd.conf ZR_ADDR /etc/default/ircddbmhd ZR_ADDR
-
-transfer_value /opt/products/dstar/dstar_gw/dsgwd/dsgwd.conf ZR_PORT /etc/default/ircddbmhd ZR_PORT
+if [ "$?" = 1 ]
+then
+  IRCDDBD_CONFIG_CHANGED=1
+fi
 
 transfer_value /opt/products/dstar/dstar_gw/dsipsvd/dsipsvd.conf ZR_CALLSIGN /etc/ircddbd/ircDDB.properties rptr_call
 
+if [ "$?" = 1 ]
+then
+  IRCDDBD_CONFIG_CHANGED=1
+fi
 
-echo "* DStarMonitor"
+transfer_value /opt/products/dstar/dstar_gw/dsgwd/dsgwd.conf ZR_ADDR /etc/default/ircddbmhd ZR_ADDR
+
+if [ "$?" = 1 ]
+then
+  IRCDDBMHD_CONFIG_CHANGED=1
+fi
+
+transfer_value /opt/products/dstar/dstar_gw/dsgwd/dsgwd.conf ZR_PORT /etc/default/ircddbmhd ZR_PORT
+
+if [ "$?" = 1 ]
+then
+  IRCDDBMHD_CONFIG_CHANGED=1
+fi
+
+
+echo ""
+echo "* DStarMonitor config cleanup"
 
 if [ -d /opt/dstarmon ]
 then
@@ -152,6 +186,103 @@ then
     echo "  file $D does not exist"
   fi
 else
-  echo "  DStarMonitor could not be found"
+  echo "  DStarMonitor not found"
 fi
+
+echo ""
+echo "* dstar_gw startup script cleanup"
+
+D=/etc/init.d/dstar_gw
+
+if [ -f $D ]
+then
+  config_changed=FALSE
+
+  if grep -q "^[[:space:]]*killall -q -u ircddb" $D
+  then
+    comment_out $D "killall -q -u ircddb"
+    config_changed=TRUE
+  fi
+
+  if grep -q "^[[:space:]]*[[:graph:]]*.start.sh 2>.1 > .dev.null" $D
+  then
+    comment_out $D "[[:graph:]]*.start.sh 2>.1 > .dev.null"
+    config_changed=TRUE
+  fi
+
+  if [ "$config_changed" = "FALSE" ]
+  then
+    echo "  no old ircDDB config lines found"
+  fi
+else
+  echo "  dstar_gw startup script could not be found"
+fi
+
+echo ""
+echo "* ircDDB password"
+
+D=/etc/ircddbd/ircDDB.properties
+
+if [ -f $D ]
+then
+  if grep -q "irc_password=IRCDDB_PASSWORD" $D
+  then
+    if [ $# != 1 ]
+    then
+      echo "#######################################"
+      echo "# please run this script again with   #"
+      echo "# the ircDDB password as command line #"
+      echo "# argument:                           #"
+      echo "# /usr/sbin/ircddbconfig pAsSwOrD     #"
+      echo "#######################################"
+      exit
+    else
+      TMP=` /bin/mktemp `
+      echo "irc_password=$1" > "$TMP"
+      transfer_value "$TMP" irc_password $D irc_password
+      /bin/rm -f "$TMP"
+      IRCDDBD_CONFIG_CHANGED=1
+    fi
+  else
+    echo "  a password is set in $D"
+  fi
+else
+  echo "  $D not found"
+fi
+
+echo ""
+echo "* repeater callsign check"
+
+if [ -f $D ]
+then
+  if grep -q "rptr_call=CALLSIGN" $D
+  then
+    echo "#######################################"
+    echo "# The repeater callsign could not be  #"
+    echo "# determined automatically. Please    #"
+    echo "# edit /etc/ircddbd/ircDDB.properties #"
+    echo "#######################################"
+  else
+    echo "  a repeater callsign is set in $D"
+
+    if [ "$IRCDDBD_CONFIG_CHANGED" = 1 ]
+    then
+      echo "  restarting ircddbd service"
+      service ircddbd stop
+      service ircddbd start
+    fi
+
+    if [ "$IRCDDBMHD_CONFIG_CHANGED" = 1 ]
+    then
+      echo "  restarting ircddbmhd service"
+      service ircddbmhd stop
+      service ircddbmhd start
+    fi
+  fi
+else
+  echo "  $D not found"
+fi
+
+
+
 
