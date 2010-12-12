@@ -104,8 +104,7 @@ transfer_value() {
 
 echo "*** ircDDB auto config script"
 
-IRCDDBD_CONFIG_CHANGED=0
-IRCDDBMHD_CONFIG_CHANGED=0
+IRCDDB_CONFIG_CHANGED=0
 
 echo ""
 echo "* looking for ircDDB parameters that can be set automatically:"
@@ -114,35 +113,35 @@ transfer_value /etc/default/ircddbmhd MHEARD_UDP_PORT /etc/ircddbd/ircDDB.proper
 
 if [ "$?" = 1 ]
 then
-  IRCDDBD_CONFIG_CHANGED=1
+  IRCDDB_CONFIG_CHANGED=1
 fi
 
 transfer_value /opt/products/dstar/dstar_gw/dsipsvd/dsipsvd.conf ZR_CALLSIGN /etc/ircddbd/ircDDB.properties rptr_call
 
 if [ "$?" = 1 ]
 then
-  IRCDDBD_CONFIG_CHANGED=1
+  IRCDDB_CONFIG_CHANGED=1
 fi
 
 transfer_value /opt/ircDDB/ircDDB.properties irc_password /etc/ircddbd/ircDDB.properties irc_password
 
 if [ "$?" = 1 ]
 then
-  IRCDDBD_CONFIG_CHANGED=1
+  IRCDDB_CONFIG_CHANGED=1
 fi
 
 transfer_value /opt/products/dstar/dstar_gw/dsgwd/dsgwd.conf ZR_ADDR /etc/default/ircddbmhd ZR_ADDR
 
 if [ "$?" = 1 ]
 then
-  IRCDDBMHD_CONFIG_CHANGED=1
+  IRCDDB_CONFIG_CHANGED=1
 fi
 
 transfer_value /opt/products/dstar/dstar_gw/dsgwd/dsgwd.conf ZR_PORT /etc/default/ircddbmhd ZR_PORT
 
 if [ "$?" = 1 ]
 then
-  IRCDDBMHD_CONFIG_CHANGED=1
+  IRCDDB_CONFIG_CHANGED=1
 fi
 
 
@@ -248,8 +247,7 @@ then
       echo "irc_password=$1" > "$TMP"
       transfer_value "$TMP" irc_password $D irc_password
       /bin/rm -f "$TMP"
-      IRCDDBD_CONFIG_CHANGED=1
-      IRCDDBMHD_CONFIG_CHANGED=1
+      IRCDDB_CONFIG_CHANGED=1
     fi
   else
     echo "  a password is set in $D"
@@ -273,19 +271,15 @@ then
   else
     echo "  a repeater callsign is set in $D"
 
-    if [ "$IRCDDBD_CONFIG_CHANGED" = 1 ]
+    if [ "$IRCDDB_CONFIG_CHANGED" = 1 ]
     then
-      echo "  restarting ircddbd service"
+      echo "  restarting ircDDB services"
       service ircddbd stop
-      service ircddbd start
-    fi
-
-    if [ "$IRCDDBMHD_CONFIG_CHANGED" = 1 ]
-    then
-      echo "  restarting ircddbmhd service"
       service ircddbmhd stop
+      service ircddbd start
       service ircddbmhd start
     fi
+
   fi
 else
   echo "  $D not found"
