@@ -21,7 +21,7 @@
 
 
 Name: ircddbd
-Version: 1.0
+Version: 1.2
 Release: 1
 License: GPLv2
 Group: Networking/Daemons
@@ -29,7 +29,7 @@ Summary: ircDDB daemon
 URL: http://ircddb.net
 Packager: Michael Dirska DL1BFF <dl1bff@mdx.de>
 Requires: curl >= 7
-Source0: dl1bff-ircddbd-v1.0-0-g07caea2.tar.gz
+Source0: dl1bff-ircddbd-v1.2-0-g4888657.tar.gz
 BuildRoot: %{_tmppath}/%{name}-root
 
 %description
@@ -38,7 +38,7 @@ and starts the ircDDB java program.
 
 
 %prep
-%setup -n dl1bff-ircddbd-07caea2
+%setup -n dl1bff-ircddbd-4888657
 
 
 %build

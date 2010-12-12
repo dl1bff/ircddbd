@@ -21,15 +21,15 @@
 
 
 Name: ircddbconfig
-Version: 1.0
-Release: 3
+Version: 1.2
+Release: 1
 License: GPLv2
 Group: Applications/System
 Summary: ircDDB auto config script
 URL: http://ircddb.net
 Packager: Michael Dirska DL1BFF <dl1bff@mdx.de>
-Requires: ed >= 0.2, gawk >= 3, ircddbd, ircddbmhd
-Source0: dl1bff-ircddbd-v1.0-0-g07caea2.tar.gz
+Requires: ed >= 0.2, gawk >= 3, ircddbd, ircddbmhd, mktemp
+Source0: dl1bff-ircddbd-v1.2-0-g4888657.tar.gz
 BuildRoot: %{_tmppath}/%{name}-root
 BuildArch: noarch
 
@@ -38,7 +38,7 @@ This script tries to remove old versions of ircDDB from the computer and
 configures the various parts of a DSTAR repeater automatically.
 
 %prep
-%setup -n dl1bff-ircddbd-07caea2
+%setup -n dl1bff-ircddbd-4888657
 
 %build
 
