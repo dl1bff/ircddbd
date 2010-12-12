@@ -242,6 +242,7 @@ then
       transfer_value "$TMP" irc_password $D irc_password
       /bin/rm -f "$TMP"
       IRCDDBD_CONFIG_CHANGED=1
+      IRCDDBMHD_CONFIG_CHANGED=1
     fi
   else
     echo "  a password is set in $D"
