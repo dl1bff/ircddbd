@@ -100,6 +100,35 @@ transfer_value() {
 }
 
 
+fix_dstar_gw_init_script() {
+
+  D="$1"
+  DBAK="$D".ircddb.bak
+
+  if cp "$D" "$DBAK"
+  then
+    sed '
+      /^start)$/ {
+      N
+      N
+      s/^\(start.\n    start\n\)\(    ;;\)$/\1    \/sbin\/service ircddbd start\n\2/
+      }
+      /^stop)$/ {
+      N
+      N
+      s/^\(stop.\n\)\(    stop\n    ;;\)$/\1    \/sbin\/service ircddbd stop\n\2/
+      }
+      /^restart)$/ {
+      N
+      N
+      N
+      s/^\(restart.\n\)\(    stop\n    start\n\)\(    ;;\)$/\1    \/sbin\/service ircddbd stop\n\2    \/sbin\/service ircddbd start\n\3/
+      }
+     '  < "$DBAK"  > "$D"
+  fi
+}
+
+
 
 
 echo "*** ircDDB auto config script"
@@ -220,6 +249,15 @@ then
   then
     echo "  no old ircDDB config lines found"
   fi
+
+  if grep -q "^    .sbin.service ircddbd start$" $D
+  then
+    echo "  ircddbd start/stop commands already inserted"
+  else
+    echo "  inserting ircddbd start/stop commands"
+    fix_dstar_gw_init_script $D
+  fi
+
 else
   echo "  dstar_gw startup script could not be found"
 fi
