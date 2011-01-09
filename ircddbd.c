@@ -2,7 +2,7 @@
 
 ircddbd daemon
 
-Copyright (C) 2010   Michael Dirska, DL1BFF (dl1bff@mdx.de)
+Copyright (C) 2011   Michael Dirska, DL1BFF (dl1bff@mdx.de)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,6 +36,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "libutil.h"
 
+#include "ircddbd_version.h"
+
+#if !defined(IRCDDBD_VERSION)
+#define IRCDDBD_VERSION "debug-version"
+#endif
 
 
 #define SYSLOG_PROGRAM_NAME "ircddbd"
@@ -43,7 +48,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static void usage(const char * a)
 {
-  fprintf (stderr, "Usage: %s <pid-file> <working dir> <stdout file> <stderr file>\n", a);
+  fprintf (stderr, SYSLOG_PROGRAM_NAME " version '%s'\n"
+    "Usage: %s <pid-file> <working dir> <stdout file> <stderr file>\n", IRCDDBD_VERSION, a);
 }
 
 int pid;
@@ -134,8 +140,9 @@ int main(int argc, char *argv[])
     pidfile_write(pfh);
   }
 
-  syslog(LOG_INFO, "start");
+  syslog(LOG_INFO, SYSLOG_PROGRAM_NAME " version '%s'",  IRCDDBD_VERSION );
 
+  setenv("PACKAGE_VERSION", IRCDDBD_VERSION, 1);
 
   r = chdir( argv[2] );
 

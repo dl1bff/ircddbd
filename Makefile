@@ -2,7 +2,7 @@
 # 
 # ircddbd daemon
 # 
-# Copyright (C) 2010   Michael Dirska, DL1BFF (dl1bff@mdx.de)
+# Copyright (C) 2011   Michael Dirska, DL1BFF (dl1bff@mdx.de)
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,16 +22,18 @@
 all: ircddbd
 
 
-pidfile.c: libutil.h
+pidfile.o: libutil.h
 
-flopen.c: libutil.h
+flopen.o: libutil.h
 
-ircddbd.c: libutil.h
+ircddbd.o: libutil.h ircddbd_version.h
 
 
 ircddbd: ircddbd.o pidfile.o flopen.o
 
 
+ircddbd_version.h:
+	touch ircddbd_version.h
 
 clean:
 	rm -f *.o
