@@ -13,3 +13,7 @@ grant codeBase "file:/opt/products/dstar/apache-tomcat-5.5.20/common/lib/postgre
         permission java.security.AllPermission;
 };
 
+grant codeBase "file:/usr/share/java/postgresql-jdbc3.jar" {
+        permission java.security.AllPermission;
+};
+

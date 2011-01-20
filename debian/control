@@ -1,0 +1,15 @@
+Source: ircddbd
+Section: hamradio
+Priority: extra
+Maintainer: Michael Dirska <dl1bff@mdx.de>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.7.3
+Homepage: http://ircDDB.net
+
+Package: ircddbd
+Architecture: any
+Depends: libc6, sun-java5-bin, curl, libpg-java, adduser
+Description: ircDDB daemon
+ The ircDDB daemon downloads the latest JAR files
+ and starts the ircDDB java program.
+

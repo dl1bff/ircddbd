@@ -1,0 +1,47 @@
+#
+#
+# ircddbd daemon
+#
+# Copyright (C) 2011   Michael Dirska, DL1BFF (dl1bff@mdx.de)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+
+URL=http://group1-update.ircddb.net/ircDDB
+
+FILE1=app2.jar
+FILE2=ircDDB2.jar
+VARDIR=/var/cache/ircddbd
+
+PGSQL=/usr/share/java/postgresql-jdbc3.jar
+
+EXECBIN=/usr/lib/jvm/java-1.5.0-sun/jre/bin/java
+ARG1="-Djava.security.manager"
+ARG2="-Djava.security.policy=ircDDB.policy"
+ARG3="-cp"
+ARG4="$VARDIR/$FILE1:$VARDIR/$FILE2:$PGSQL"
+ARG5="net.ircDDB.IRCDDBApp"
+
+export FILE1 FILE2 VARDIR EXECBIN ARG1 ARG2 ARG3 ARG4 ARG5 URL
+
+WORKINGDIR=/etc/ircddbd
+LOGDIR=/var/log/ircddbd
+
+DAEMON_ENV="URL=$URL FILE1=$FILE1 FILE2=$FILE2 VARDIR=$VARDIR"
+DAEMON_ENV="$DAEMON_ENV EXECBIN=$EXECBIN ARG1=$ARG1 ARG2=$ARG2"
+DAEMON_ENV="$DAEMON_ENV ARG3=$ARG3 ARG4=$ARG4 ARG5=$ARG5"
+
+DAEMON_ARGS="$PIDFILE $WORKINGDIR $LOGDIR/stdout.log $LOGDIR/stderr.log"
+

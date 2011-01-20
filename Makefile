@@ -38,11 +38,23 @@ ircddbd_version.h:
 clean:
 	rm -f *.o
 
-dist-clean: clean
-	rm -f ircddbd
+distclean: clean
+	rm -f ircddbd ircddbd_version.h
 
 rpm:
 	rpmbuild -ba ircddbd.spec
 
+
+install: ircddbd
+	install ircddbd $(DESTDIR)/usr/sbin/ircddbd
+	install -d $(DESTDIR)/var/run/ircddbd
+	install -d $(DESTDIR)/var/cache/ircddbd
+	install -d $(DESTDIR)/var/lib/ircddbd
+	install -d $(DESTDIR)/var/log/ircddbd
+	install ircDDB.keystore $(DESTDIR)/etc/ircddbd/ircDDB.keystore
+	install ircDDB.policy $(DESTDIR)/etc/ircddbd/ircDDB.policy
+	install ircDDB.properties $(DESTDIR)/etc/ircddbd/ircDDB.properties
+	install logrotate.ircddbd $(DESTDIR)/etc/logrotate.d/ircddbd
+	
 
 
