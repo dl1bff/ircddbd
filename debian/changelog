@@ -1,3 +1,9 @@
+ircddbd (1.2-2) lenny; urgency=low
+
+  * now depends on sun-java6-jre (lenny and squeeze)
+
+ -- Michael Dirska <dl1bff@mdx.de>  Tue, 08 Feb 2011 08:05:06 +0100
+
 ircddbd (1.2-1) lenny; urgency=low
 
   * Initial release

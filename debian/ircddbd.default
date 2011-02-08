@@ -27,7 +27,7 @@ VARDIR=/var/cache/ircddbd
 
 PGSQL=/usr/share/java/postgresql-jdbc3.jar
 
-EXECBIN=/usr/lib/jvm/java-1.5.0-sun/jre/bin/java
+EXECBIN=/usr/lib/jvm/java-6-sun/jre/bin/java
 ARG1="-Djava.security.manager"
 ARG2="-Djava.security.policy=ircDDB.policy"
 ARG3="-cp"
