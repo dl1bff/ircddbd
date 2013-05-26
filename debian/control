@@ -8,7 +8,7 @@ Homepage: http://ircDDB.net
 
 Package: ircddbd
 Architecture: any
-Depends: libc6, sun-java6-jre, curl, libpg-java, adduser
+Depends: libc6, java6-runtime-headless, curl, libpg-java, adduser
 Description: ircDDB daemon
  The ircDDB daemon downloads the latest JAR files
  and starts the ircDDB java program.
